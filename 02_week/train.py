@@ -6,9 +6,15 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
 import mlflow
 import mlflow.sklearn
+from mlflow.tracking import MlflowClient
 
-mlflow.set_tracking_uri("sqlite:///mlflow.db")
+
+client = MlflowClient("http://127.0.0.1:5000")
+
+
+mlflow.set_tracking_uri("http://127.0.0.1:5000")
 mlflow.set_experiment("my_first_experiment")
+print(f"tracking URI: '{mlflow.get_tracking_uri()}'")
 
 
 
@@ -43,7 +49,7 @@ def run_train(data_path: str):
 
         rmse = mean_squared_error(y_val, y_pred, squared=False)
         mlflow.log_metric("rmse", rmse)
-        mlflow.sklearn.log_model(rf,"model")
+        mlflow.sklearn.log_model(rf,artifact_path="models")
 
 
 if __name__ == '__main__':

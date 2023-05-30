@@ -32,7 +32,7 @@ def run_optimization(data_path: str, num_trials: int):
 
     X_train, y_train = load_pickle(os.path.join(data_path, "train.pkl"))
     X_val, y_val = load_pickle(os.path.join(data_path, "val.pkl"))
-
+#define the search space
     def objective(trial):
         params = {
             'n_estimators': trial.suggest_int('n_estimators', 10, 50, 1),
@@ -47,6 +47,10 @@ def run_optimization(data_path: str, num_trials: int):
         rf.fit(X_train, y_train)
         y_pred = rf.predict(X_val)
         rmse = mean_squared_error(y_val, y_pred, squared=False)
+        mlflow.log_metric("rmse", rmse)
+        mlflow.log_params(params)
+        mlflow.sklearn.log_model(rf,artifact_path="models")
+
 
         return rmse
 
