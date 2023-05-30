@@ -39,6 +39,9 @@ def train_and_log_model(data_path, params):
         mlflow.log_metric("val_rmse", val_rmse)
         test_rmse = mean_squared_error(y_test, rf.predict(X_test), squared=False)
         mlflow.log_metric("test_rmse", test_rmse)
+        mlflow.log_model(rf, artifact_path="models_mlflow")
+        mlflow.log_params(params)
+        mlflow.log_artifact("models.preprocessor.b", artifact_path="preprocessor")
 
 
 @click.command()
